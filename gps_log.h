@@ -5,12 +5,7 @@
  * @version 1.0
  */
 
-#include <fcntl.h>	// open, read, write, close syscalls
-#include <stdio.h>	// printf...
-#include <sys/stat.h>	// file permissions
-#include <time.h>
-
-#define LOG_PATH	"/var/log/gps"
+#define LOG_PATH	"/var/log/gps.log"
 #define LOG_PATTERN	"[%d-%d-%d %d:%d:%d] %s\n"
 
 /**

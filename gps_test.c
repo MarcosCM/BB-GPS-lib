@@ -13,7 +13,7 @@ int main(int argc, char **argv){
 	int i;
 
 	gps_init();
-	for(i=0; i<100; i++){
+	for(i=0; i<20; i++){
 		gps_read(buf);
 	}
 	gps_exit();

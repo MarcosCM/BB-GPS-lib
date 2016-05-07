@@ -7,7 +7,7 @@
 
 #define LOG // write to log
 
-#include <fcntl.h>	// open, read, write, close syscalls
+#include <fcntl.h>	// using low level functions (syscalls) to get more control over the char special file
 #include <string.h>	// string functions
 #include "gps.h"
 #ifdef LOG
@@ -37,7 +37,7 @@ int gps_init(void){
 }
 
 int gps_read(char *buf){
-	char frame[100], curr_char[2];
+	char frame[100], curr_char[10];
 	int i = 0;
 
 	// wait for the start of frame
