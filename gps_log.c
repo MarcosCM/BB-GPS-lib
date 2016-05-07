@@ -28,7 +28,7 @@ int gps_log_init(void){
 	return 0;
 }
 
-int gps_log(const char *buf){
+int gps_log(const char *buf, const char *level){
 	struct tm tm;
 	if (log_file<0) return -1;
 	tm = *get_datetime();

@@ -28,12 +28,13 @@ int gps_init(void){
 	if (device_fd<0){
 		msg = "Could not open device";
 		#ifdef LOG
-		gps_log(msg);
+		gps_log(msg, LOG_ERROR);
 		#else
 		printf("%s\n", msg);
 		#endif
 		return -1;
 	}
+	return 0;
 }
 
 int gps_read(char *buf){
@@ -43,7 +44,7 @@ int gps_read(char *buf){
 	// wait for the start of frame
 	do{
 		read(device_fd, curr_char, 1);
-	} while(curr_char[0] != START_OF_FRAME);
+	} while(curr_char[0] != START_OF_SENTENCE);
 	frame[i] = curr_char[0];
 	i++;
 
@@ -55,18 +56,27 @@ int gps_read(char *buf){
 		read(device_fd, curr_char, 1);
 		frame[i] = curr_char[0];
 		i++;
-	} while(curr_char[0] != END_OF_FRAME);
+	} while(curr_char[0] != END_OF_SENTENCE);
 	frame[i] = '\0';
 
 	#ifdef LOG
-	gps_log(frame);
+	gps_log(frame, LOG_INFO);
 	#endif
 	strcpy(buf, frame);
 	return 0;
 }
 
 int gps_write(const char *buf){
-
+	int len, res;
+	len = strlen(buf);
+	res = write(device_fd, buf, len);
+	if (res<0 || res != len){
+		#ifdef LOG
+		gps_log("Could not send data to the GPS", LOG_ERROR);
+		#endif
+		return -1;
+	}
+	return res;
 }
 
 int gps_exit(void){
