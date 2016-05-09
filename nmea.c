@@ -13,11 +13,11 @@
 /**
  *	@brief Calculates the checksum over a NMEA frame.
  *
- *	@param frame Pointer to NMEA frame.
- *	@return Pointer to calculated checksum.
+ *	@param frame	Pointer to NMEA frame.
+ *	@param buf 		Pointer to user's buffer to store the checksum.
+ *	@return Operation status: negative if error, otherwise success.
  */
-static char *nmea_checksum(const char *frame){
-	char res[5];
+static int nmea_checksum(const char *frame, char *buf){
 	int i;
 	unsigned char curr_char, checksum = 0x00;
 	// omits first character $
@@ -26,15 +26,15 @@ static char *nmea_checksum(const char *frame){
 		sscanf("%x", &curr_char);
 		checksum ^= curr_char;
 	}
-	sprintf(res, "%x", checksum);
-	return res;
+	sprintf(buf, "%x", checksum);
+	return 0;
 }
 
 int nmea_build_cmd(char *buf, const char *cmd_type, ...){
 	va_list argsp;
 	char cmd[100];
 	char buf_aux[30];
-	char *checksum, *curr_arg;
+	char checksum[5], *curr_arg;
 	int i = CMD_TYPE_LENGTH, j;
 
 	// append manufacturer starting and cmd_type
@@ -59,7 +59,7 @@ int nmea_build_cmd(char *buf, const char *cmd_type, ...){
 
 	// append checksum
 	cmd[i] = '\0';
-	checksum = nmea_checksum(cmd);
+	nmea_checksum(cmd, checksum);
 	cmd[i] = '*';
 	i++;
 	cmd[i] = checksum[0];
