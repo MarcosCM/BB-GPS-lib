@@ -44,7 +44,7 @@ int gps_read(char *buf){
 	// wait for the start of frame
 	do{
 		read(device_fd, curr_char, 1);
-	} while(curr_char[0] != START_OF_SENTENCE);
+	} while(curr_char[0] != CHAR_START_OF_STC);
 	frame[i] = curr_char[0];
 	i++;
 
@@ -56,7 +56,7 @@ int gps_read(char *buf){
 		read(device_fd, curr_char, 1);
 		frame[i] = curr_char[0];
 		i++;
-	} while(curr_char[0] != END_OF_SENTENCE);
+	} while(curr_char[0] != CHAR_END_OF_STC);
 	frame[i] = '\0';
 
 	#ifdef LOG

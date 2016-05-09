@@ -5,13 +5,18 @@
  * @version 1.0
  */
 
-#define SENTENCE_STARTS_WITH	"$GP"
-#define START_OF_SENTENCE	'$'
-#define END_OF_SENTENCE	'\n'
+// NMEA sentences
+#define STC_STARTS_WITH		"$GP"
+#define STC_ENDS_WITH		"\r\n"
+#define CHAR_START_OF_STC	'$'
+#define CHAR_END_OF_STC		'\n'
 
-#define COMMAND_STARTS_WITH	"$PMTK"
-#define START_OF_COMMAND	'$'
-#define END_OF_COMMAND		'\n'
+// Propietary sentences
+#define CMD_STARTS_WITH		"$PMTK"
+#define CMD_ENDS_WITH		"\r\n"
+#define CHAR_START_OF_CMD	'$'
+#define CHAR_END_OF_CMD		'\n'
+#define CMD_TYPE_LENGTH		8
 
 #define CMD_TEST			"000"
 #define CMD_ACK				"001"
@@ -38,3 +43,9 @@
 #define CMD_GET_USER_OPTION	"490"
 #define CMD_GET_FW_INFO		"605"
 #define CMD_GET_EPO_STATUS	"607"
+
+/**
+ *	Builds a NMEA command
+ *	The last param MUST be a NULL char pointer ((char *) NULL)
+ */
+int nmea_build_cmd(char *buf, const char *cmd_type, ...);
