@@ -84,4 +84,5 @@ int gps_exit(void){
 	gps_log_exit();
 	#endif
 	close(device_fd);
+	return 0;
 }
