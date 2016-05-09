@@ -13,6 +13,11 @@
 
 static FILE *log_file;
 
+/**
+ *	@brief Gets the current datetime.
+ *
+ *	@return Pointer to current datetime.
+ */
 static struct tm *get_datetime(){
 	time_t rawtime = time(NULL);
 	return localtime(&rawtime);

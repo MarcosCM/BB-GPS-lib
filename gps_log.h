@@ -12,14 +12,22 @@
 #define LOG_ERROR	"-ERROR-"
 
 /**
- *	Log init
+ *	@brief Log init.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_log_init(void);
 /**
- *	Writes to log
+ *	@brief Writes to log.
+ *
+ *	@param buf 		Pointer to user's buffer.
+ *	@param level	Pointer to log level.
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_log(const char *buf, const char *level);
 /**
- *	Log exit
+ *	@brief Log exit.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_log_exit(void);

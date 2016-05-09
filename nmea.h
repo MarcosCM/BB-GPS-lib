@@ -45,7 +45,12 @@
 #define CMD_GET_EPO_STATUS	"607"
 
 /**
- *	Builds a NMEA command
- *	The last param MUST be a NULL char pointer ((char *) NULL)
+ *	@brief Builds a NMEA command.
+ *
+ *	@param buf 		Pointer to user's buffer.
+ *	@param cmd_type Pointer to command data type.
+ *	@param ...		Command data. The last param MUST be a NULL char pointer ((char *) NULL) to
+ *					let the function know when the list ends.
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int nmea_build_cmd(char *buf, const char *cmd_type, ...);

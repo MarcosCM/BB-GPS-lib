@@ -10,8 +10,11 @@
 #include <string.h>
 #include "nmea.h"
 
-/*
- *	Calculates the checksum over a NMEA frame
+/**
+ *	@brief Calculates the checksum over a NMEA frame.
+ *
+ *	@param frame Pointer to NMEA frame.
+ *	@return Pointer to calculated checksum.
  */
 static char *nmea_checksum(const char *frame){
 	char res[5];

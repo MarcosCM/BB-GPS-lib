@@ -8,18 +8,28 @@
 #include "nmea.h"
 
 /**
- *	Lib init
+ *	@brief Lib init.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_init(void);
 /**
- *	Reads a single NMEA frame
+ *	@brief Reads a single NMEA frame.
+ *
+ *	@param buf Pointer to user's buffer.
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_read(char *buf);
 /**
- *	Writes a single NMEA frame
+ *	@brief Writes a single NMEA frame.
+ *
+ *	@param buf Pointer to user's buffer.
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_write(const char *buf);
 /**
- *	Lib exit
+ *	@brief Lib exit.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_exit(void);
