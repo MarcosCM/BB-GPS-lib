@@ -47,6 +47,41 @@
 #define CMD_GET_FW_INFO		"605"
 #define CMD_GET_EPO_STATUS	"607"
 
+enum data_type {INTEGER, DOUBLE, CHAR, STRING};
+
+struct nmea_frame{
+	// GGA, GSA, GSV, RMC, PMTK...
+	char frame_type[5];
+	// if it is a CMD: 000, 001, 010...
+	struct{
+		int as_int;
+		char as_str[4];
+	} cmd_type;
+	// data fields
+	struct{
+		enum data_type data_type;
+		union{
+			int i;
+			double d;
+			char c;
+		} as_num;
+		char as_str[15];
+	} data[30];
+	// A9, 3F...
+	struct{
+		unsigned char as_byte;
+		char as_str[3];
+	} checksum;
+};
+
+/**
+ *	@brief Creates a nmea_frame data from a str containing a NMEA frame.
+ *
+ *	@param str		Pointer to NMEA frame.
+ *	@param frame 	Pointer to user's buffer to store the data.
+ *	@return Operation status: negative if error, otherwise success.
+ */
+int nmea_frame_from_str(const char *str, struct nmea_frame *frame);
 /**
  *	@brief Calculates the checksum over a NMEA frame.
  *

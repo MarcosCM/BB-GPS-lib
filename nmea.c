@@ -10,6 +10,12 @@
 #include <string.h>
 #include "nmea.h"
 
+int nmea_frame_from_str(const char *str, struct nmea_frame *frame){
+	
+	return 0;
+	return -1;
+}
+
 int nmea_checksum(const char *frame, char *buf){
 	int i;
 	unsigned char curr_char, checksum = 0x00;

@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include "gps.h"
-#include "nmea.h"
 
 int main(int argc, char **argv){
 	char buf[100];
