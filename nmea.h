@@ -41,7 +41,7 @@
 #define CMD_GET_FIX_CTL		"400"
 #define CMD_GET_DGPS_MODE	"401"
 #define CMD_GET_SBAS		"413"
-#define CMD_GET_OUTPUT		"414"
+#define CMD_GET_OUTPUT_FREQ	"414"
 #define CMD_GET_DATUM		"430"
 #define CMD_GET_USER_OPTION	"490"
 #define CMD_GET_FW_INFO		"605"
