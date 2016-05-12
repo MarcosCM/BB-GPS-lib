@@ -10,14 +10,7 @@
 #include <string.h>
 #include "nmea.h"
 
-/**
- *	@brief Calculates the checksum over a NMEA frame.
- *
- *	@param frame	Pointer to NMEA frame.
- *	@param buf 		Pointer to user's buffer to store the checksum.
- *	@return Operation status: negative if error, otherwise success.
- */
-static int nmea_checksum(const char *frame, char *buf){
+int nmea_checksum(const char *frame, char *buf){
 	int i;
 	unsigned char curr_char, checksum = 0x00;
 	// omits first character $

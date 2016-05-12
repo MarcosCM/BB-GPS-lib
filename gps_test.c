@@ -14,11 +14,14 @@ int main(int argc, char **argv){
 	int i;
 
 	gps_init();
-	/*for(i=0; i<20; i++){
-		gps_read(buf);
-	}*/
+	for(i=0; i<12; i++){
+		if (gps_read(buf) == -1) printf("Read error, frame: %s\n", buf);
+	}
 	nmea_build_cmd(buf, CMD_TEST, (char *) NULL);
 	gps_write(buf);
+	for(i=0; i<12; i++){
+		if (gps_read(buf) == -1) printf("Read error, frame: %s\n", buf);
+	}
 	gps_exit();
 
 	return 0;

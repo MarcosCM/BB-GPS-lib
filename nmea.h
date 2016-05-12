@@ -10,12 +10,15 @@
 #define STC_ENDS_WITH		"\r\n"
 #define CHAR_START_OF_STC	'$'
 #define CHAR_END_OF_STC		'\n'
+#define CHAR_END_OF_STC_2	'\r'
+#define CHAR_START_OF_CHKS	'*'
 
 // Propietary sentences
 #define CMD_STARTS_WITH		"$PMTK"
 #define CMD_ENDS_WITH		"\r\n"
 #define CHAR_START_OF_CMD	'$'
 #define CHAR_END_OF_CMD		'\n'
+#define CHAR_END_OF_CMD_2	'\r'
 #define CMD_TYPE_LENGTH		8
 
 #define CMD_TEST			"000"
@@ -44,6 +47,14 @@
 #define CMD_GET_FW_INFO		"605"
 #define CMD_GET_EPO_STATUS	"607"
 
+/**
+ *	@brief Calculates the checksum over a NMEA frame.
+ *
+ *	@param frame	Pointer to NMEA frame.
+ *	@param buf 		Pointer to user's buffer to store the checksum.
+ *	@return Operation status: negative if error, otherwise success.
+ */
+int nmea_checksum(const char *frame, char *buf);
 /**
  *	@brief Builds a NMEA command.
  *

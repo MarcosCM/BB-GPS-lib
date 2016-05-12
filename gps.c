@@ -14,6 +14,8 @@
 #include "gps_log.h"
 #endif
 
+#include <stdio.h>
+
 #define DEVICE_PATH "/dev/ttyO4"
 
 static int device_fd;
@@ -38,8 +40,8 @@ int gps_init(void){
 }
 
 int gps_read(char *buf){
-	char frame[100], curr_char[10];
-	int i = 0;
+	char frame[100], curr_char[10], valid_chks[5], frame_chks[5];
+	int i = 0, j, frame_chks_idx = -1;
 
 	// wait for the start of frame
 	do{
@@ -55,6 +57,10 @@ int gps_read(char *buf){
 		// completing the frame
 		read(device_fd, curr_char, 1);
 		frame[i] = curr_char[0];
+
+		// save the checksum index to later check whether it is a valid frame
+		if (curr_char[0] == CHAR_START_OF_CHKS) frame_chks_idx = i;
+
 		i++;
 	} while(curr_char[0] != CHAR_END_OF_STC);
 	frame[i] = '\0';
@@ -62,8 +68,23 @@ int gps_read(char *buf){
 	#ifdef LOG
 	gps_log(frame, LOG_INFO);
 	#endif
+	// copy the frame to user's buffer
 	strcpy(buf, frame);
-	return 0;
+
+	// if the frame has no checksum return error status
+	if (frame_chks_idx == -1) return -1;
+	// if the frame has checksum then check whether it is valid
+	// frame checksum
+	for(j=1; frame[frame_chks_idx+j] != CHAR_END_OF_STC_2; j++){
+		frame_chks[j-1] = frame[frame_chks_idx+j];
+	}
+	frame_chks[j-1] = '\0';
+	// valid checksum
+	frame[frame_chks_idx] = '\0';
+	nmea_checksum(frame, valid_chks);
+
+	if (strcasecmp(frame_chks, valid_chks) == 0) return 0;
+	else return -1;
 }
 
 int gps_write(const char *buf){
