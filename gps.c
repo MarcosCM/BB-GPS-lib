@@ -22,18 +22,18 @@ static int device_fd;
 
 int gps_init(void){
 	char *msg;
-	#ifdef LOG
+#ifdef LOG
 	gps_log_init();
-	#endif
+#endif
 	// open device file
 	device_fd = open(DEVICE_PATH, O_RDWR);
 	if (device_fd<0){
 		msg = "Could not open device";
-		#ifdef LOG
+#ifdef LOG
 		gps_log(msg, LOG_ERROR);
-		#else
+#else
 		printf("%s\n", msg);
-		#endif
+#endif
 		return -1;
 	}
 	return 0;
@@ -65,9 +65,9 @@ int gps_read(char *buf){
 	} while(curr_char[0] != CHAR_END_OF_STC);
 	frame[i] = '\0';
 
-	#ifdef LOG
+#ifdef LOG
 	gps_log(frame, LOG_INFO);
-	#endif
+#endif
 	// copy the frame to user's buffer
 	strcpy(buf, frame);
 
@@ -92,18 +92,18 @@ int gps_write(const char *buf){
 	len = strlen(buf);
 	res = write(device_fd, buf, len);
 	if (res<0 || res != len){
-		#ifdef LOG
+#ifdef LOG
 		gps_log("Could not send data to the GPS", LOG_ERROR);
-		#endif
+#endif
 		return -1;
 	}
 	return res;
 }
 
 int gps_exit(void){
-	#ifdef LOG
+#ifdef LOG
 	gps_log_exit();
-	#endif
+#endif
 	close(device_fd);
 	return 0;
 }
