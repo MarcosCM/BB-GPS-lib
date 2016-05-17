@@ -5,6 +5,8 @@
  * @version 1.0
  */
 
+#define NMEA_FRAME_REGEXP	"\\$([a-zA-Z]*)([0-9]{3})?(.*)\\*([a-fA-F0-9]{2})\r\n"
+
 // NMEA sentences
 #define STC_STARTS_WITH		"$GP"
 #define STC_ENDS_WITH		"\r\n"
@@ -47,11 +49,11 @@
 #define CMD_GET_FW_INFO		"605"
 #define CMD_GET_EPO_STATUS	"607"
 
-enum data_type {INTEGER, DOUBLE, CHAR, STRING};
+enum data_type {INTEGER, DOUBLE, CHAR, STRING, BLANK};
 
 struct nmea_frame{
-	// GGA, GSA, GSV, RMC, PMTK...
-	char frame_type[5];
+	// GPGGA, GPGSA, GPGSV, GPRMC, PMTK...
+	char frame_type[6];
 	// if it is a CMD: 000, 001, 010...
 	struct{
 		int as_int;
@@ -65,7 +67,7 @@ struct nmea_frame{
 			double d;
 			char c;
 		} as_num;
-		char as_str[15];
+		char as_str[30];
 	} data[30];
 	// A9, 3F...
 	struct{
