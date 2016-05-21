@@ -134,3 +134,86 @@ int nmea_build_cmd(char *buf, const char *cmd_type, ...){
 	strcpy(buf, cmd);
 	return 0;
 }
+
+int nmea_try_read_cmd_ack(char *buf, char *cmd_type, int num_reads){
+	int i;
+	char read_frame[100], *caux;
+	struct nmea_frame nmea_frame;
+	int needed_res_type;
+
+	// response type is always 001 (ACK)
+	needed_res_type = 1;
+
+	if(num_reads>0){
+		for(i=0; i<num_reads; i++){
+			gps_read(read_frame);
+			nmea_frame_from_str(read_frame, &nmea_frame);
+			// check whether it is a sentence or a command response
+			if (nmea_frame.cmd_type[0] != '\0'
+					// check whether it is an ACK
+					&& needed_res_type == (int) strtol(nmea_frame.cmd_type, &caux, 10)
+					// first data field of ACK is the command type the user sent
+					&& (int) strtol(cmd_type, &caux, 10) == (int) strtol(nmea_frame.data[0], &caux, 10)){
+				strcpy(buf, read_frame);
+				return 0;
+			}
+		}
+	}
+	else{
+		while(1){
+			gps_read(read_frame);
+			nmea_frame_from_str(read_frame, &nmea_frame);
+			// check whether it is a sentence or a command response
+			if (nmea_frame.cmd_type[0] != '\0'
+					// check whether it is an ACK
+					&& needed_res_type == (int) strtol(nmea_frame.cmd_type, &caux, 10)
+					// first data field of ACK is the command type the user sent
+					&& (int) strtol(cmd_type, &caux, 10) == (int) strtol(nmea_frame.data[0], &caux, 10)){
+				strcpy(buf, read_frame);
+				return 0;
+			}
+		}
+	}
+
+	return -1;
+}
+
+int nmea_try_read_query_res(char *buf, char *query_type, int num_reads){
+	int i;
+	char read_frame[100], *caux;
+	struct nmea_frame nmea_frame;
+	int needed_res_type;
+
+	// response type is always query command type plus 100
+	needed_res_type = (int) strtol(query_type, &caux, 10);
+	needed_res_type += 100;
+
+	if(num_reads>0){
+		for(i=0; i<num_reads; i++){
+			gps_read(read_frame);
+			nmea_frame_from_str(read_frame, &nmea_frame);
+			// check whether it is a sentence or a command response
+			if (nmea_frame.cmd_type[0] != '\0'
+					// check whether it is a response to this kind of query
+					&& needed_res_type == (int) strtol(nmea_frame.cmd_type, &caux, 10)){
+				strcpy(buf, read_frame);
+				return 0;
+			}
+		}
+	}
+	else{
+		while(1){
+			gps_read(read_frame);
+			nmea_frame_from_str(read_frame, &nmea_frame);
+			// check whether it is a sentence or a command response
+			if (nmea_frame.cmd_type[0] != '\0'
+					// check whether it is a response to this kind of query
+					&& needed_res_type == (int) strtol(nmea_frame.cmd_type, &caux, 10)){
+				strcpy(buf, read_frame);
+				return 0;
+			}
+		}
+	}
+
+	return -1;
+}

@@ -90,3 +90,23 @@ int nmea_checksum(const char *frame, char *buf);
  *	@return	Operation status: negative if error, otherwise success.
  */
 int nmea_build_cmd(char *buf, const char *cmd_type, ...);
+/**
+ *	@brief Tries to read the GPS response after sending a command.
+ *
+ *	@param buf 			Pointer to user's buffer.
+ *	@param cmd_type		Type of command the user sent.
+ *	@param num_reads	Number of reads till read fails. If 0 then there will not be limit.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
+ */
+int nmea_try_read_cmd_ack(char *buf, char *cmd_type, int num_reads);
+/**
+ *	@brief Tries to read the GPS response after sending a query command.
+ *
+ *	@param buf 			Pointer to user's buffer.
+ *	@param query_type	Type of query the user sent.
+ *	@param num_reads	Number of reads till read fails. If 0 then there will not be limit.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
+ */
+int nmea_try_read_query_res(char *buf, char *query_type, int num_reads);
