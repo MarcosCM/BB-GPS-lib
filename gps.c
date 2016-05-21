@@ -74,8 +74,8 @@ int gps_read(char *buf){
 	// if the frame has no checksum return error status
 	if (frame_chks_idx == -1) return -1;
 	// if the frame has checksum then check whether it is valid
-	// frame checksum
-	for(j=1; frame[frame_chks_idx+j] != CHAR_END_OF_STC_2; j++){
+	// frame checksum: always a two hex digits code
+	for(j=1; j<3; j++){
 		frame_chks[j-1] = frame[frame_chks_idx+j];
 	}
 	frame_chks[j-1] = '\0';
