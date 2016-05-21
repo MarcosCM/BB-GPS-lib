@@ -8,7 +8,6 @@
 #include <regex.h>	// regular expressions
 #include <stdarg.h>	// variadic functions
 #include <stdio.h>	// sscanf, sprintf
-#include <stdlib.h>	// strtol
 #include <string.h>
 #include <sys/types.h>	// size_t
 #include "nmea.h"
@@ -19,9 +18,7 @@ int nmea_frame_from_str(const char *str, struct nmea_frame *frame){
 	int i, j, data_field_idx, data_idx, len, res = -2;
 	size_t max_groups = 50;
 	regmatch_t groups[max_groups];
-	int iaux;
-	double daux;
-	char *caux, data_field[30];
+	char data_field[30];
 
 	if ((res = regcomp(&regexp, NMEA_FRAME_REGEXP, REG_EXTENDED)) != 0) return res;
 	if ((res = regexec(&regexp, str, max_groups, groups, 0)) != 0) goto FREE_AND_EXIT;
