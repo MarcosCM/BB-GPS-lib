@@ -14,6 +14,8 @@
 #define CHAR_END_OF_STC		'\n'
 #define CHAR_END_OF_STC_2	'\r'
 #define CHAR_START_OF_CHKS	'*'
+#define CHAR_DATA_DELIMITER	','
+#define MAX_DATA_FIELDS		30
 
 // Propietary sentences
 #define CMD_STARTS_WITH		"$PMTK"
@@ -55,25 +57,11 @@ struct nmea_frame{
 	// GPGGA, GPGSA, GPGSV, GPRMC, PMTK...
 	char frame_type[6];
 	// if it is a CMD: 000, 001, 010...
-	struct{
-		int as_int;
-		char as_str[4];
-	} cmd_type;
+	char cmd_type[4];
 	// data fields
-	struct{
-		enum data_type data_type;
-		union{
-			int i;
-			double d;
-			char c;
-		} as_num;
-		char as_str[30];
-	} data[30];
+	char data[MAX_DATA_FIELDS][30];
 	// A9, 3F...
-	struct{
-		unsigned char as_byte;
-		char as_str[3];
-	} checksum;
+	char checksum[3];
 };
 
 /**

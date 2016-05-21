@@ -38,37 +38,43 @@ int nmea_frame_from_str(const char *str, struct nmea_frame *frame){
 	// if second param is cmd type
 	if (groups[i].rm_so != -1){
 		len = groups[i].rm_eo - groups[i].rm_so;
-		memcpy((*frame).cmd_type.as_str, &str[groups[i].rm_so], len);
-		(*frame).cmd_type.as_int = (int) strtol(&str[groups[i].rm_so], &caux, 10);
+		memcpy((*frame).cmd_type, &str[groups[i].rm_so], len);
 		(*frame).frame_type[len] = '\0';
+	}
+	else{
+		(*frame).cmd_type[0] = '\0';
 	}
 	i++;
 
 	// data fields
 	data_idx = 0;
 	data_field_idx = 0;
-	for(j=groups[i].rm_so; j<groups[i].rm_eo; j++){
-		if (str[j] == ',') continue;
-		// append char to data field
-		data_field[data_field_idx] = str[j];
-		// if there are no more chars to append
-		// then copy it to the nmea frame
-		if (str[j + 1] == ','){
-			data_field[data_field_idx + 1] = '\0';
-			strcpy((*frame).data[data_idx].as_str, data_field);
+	// char at groups[i].rm_so is ',' so it will skip it
+	for(j=groups[i].rm_so + 1; j<groups[i].rm_eo; j++){
+		if (str[j] == CHAR_DATA_DELIMITER){
+			data_field[data_field_idx] = '\0';
+			strcpy((*frame).data[data_idx], data_field);
 			// reset data field and increment data pointer
 			data_field_idx = 0;
+			data_field[0] = '\0';
 			data_idx++;
 		}
-		else data_field_idx++;
+		else{
+			// append char to data field
+			data_field[data_field_idx] = str[j];
+			data_field_idx++;
+		}
+	}
+	// set the remaining data fields as blank
+	for(; data_idx<MAX_DATA_FIELDS; data_idx++){
+		(*frame).data[data_idx][0] = '\0';
 	}
 	i++;
 
 	// checksum
 	len = groups[i].rm_eo - groups[i].rm_so;
-	memcpy((*frame).checksum.as_str, &str[groups[i].rm_so], len);
-	(*frame).checksum.as_str[len] = '\0';
-	sscanf((*frame).checksum.as_str, "0x%x", &(*frame).checksum.as_byte);
+	memcpy((*frame).checksum, &str[groups[i].rm_so], len);
+	(*frame).checksum[len] = '\0';
 
 	FREE_AND_EXIT:
 	regfree(&regexp);
@@ -105,7 +111,7 @@ int nmea_build_cmd(char *buf, const char *cmd_type, ...){
 	BUILDING_CMD_DATA:
 	curr_arg = va_arg(argsp, char *);
 	if (curr_arg != NULL){
-		buf_aux[0] = ',';
+		buf_aux[0] = CHAR_DATA_DELIMITER;
 		strcpy(&buf_aux[1], curr_arg);
 		for(j=0; buf_aux[j] != '\0'; j++){
 			cmd[i] = buf_aux[j];

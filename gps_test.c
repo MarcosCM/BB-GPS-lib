@@ -18,8 +18,10 @@ int main(int argc, char **argv){
 	printf("%s\n", buf);
 	nmea_frame_from_str(buf, &nmea_frame);
 	printf("%s\n", nmea_frame.frame_type);
-	printf("%s\n", nmea_frame.data[0].as_str);
-	printf("%s\n", nmea_frame.checksum.as_str);
+	printf("%s\n", nmea_frame.cmd_type);
+	for(i=0; i<MAX_DATA_FIELDS; i++){
+		printf("data[%d]: %s\n", i, nmea_frame.data[i]);
+	}
 	/*// Reading default GGA, GSA, GSV and RMC frames
 	for(i=0; i<8; i++){
 		if (gps_read(buf) == -1) printf("Error while reading from the GPS, frame: %s\n", buf);
