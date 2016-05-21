@@ -6,7 +6,7 @@
  */
 
 #define LOG_PATH	"/var/log/gps.log"
-#define LOG_PATTERN	"[%d-%d-%d %d:%d:%d] %s\n"
+#define LOG_PATTERN	"[%d-%d-%d %d:%d:%d] %s %s\n"
 #define LOG_INFO	"-INFO-"
 #define LOG_WARNING	"-WARNING"
 #define LOG_ERROR	"-ERROR-"

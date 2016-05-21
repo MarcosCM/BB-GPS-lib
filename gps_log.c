@@ -39,7 +39,7 @@ int gps_log(const char *buf, const char *level){
 	tm = *get_datetime();
 	fprintf(log_file, LOG_PATTERN,
 		tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec,
-		buf);
+		level, buf);
 	return 0;
 }
 
