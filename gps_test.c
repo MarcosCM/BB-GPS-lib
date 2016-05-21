@@ -22,12 +22,15 @@ int main(int argc, char **argv){
 
 
 	/* Reading default GGA, GSA, GSV and RMC frames */
+	printf("%s\n", "TEST: reading ordinary frames");
 	for(i=0; i<8; i++){
 		if (gps_read(buf) == -1) printf(ERR_READING, buf);
+		else printf("Read frame: %s", buf);
 	}
 
 
 	/* Reading all the fields of a single frame */
+	printf("%s\n", "TEST: reading fields of nmea_frame");
 	if (gps_read(buf) == -1) printf(ERR_READING, buf);
 	else{
 		printf("%s\n", buf);
@@ -41,16 +44,8 @@ int main(int argc, char **argv){
 	}
 
 
-	/* Sending commands to the GPS */
-	// TEST frame
-	nmea_build_cmd(buf, CMD_TEST, (char *) NULL);
-	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
-	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
-	if (nmea_try_read_cmd_ack(buf, CMD_TEST, 10) == -1) printf(ERR_READING, buf);
-	else printf(READ_RESPONSE_LOG_PATTERN, buf);
-
-
 	/* Querying configuration data to GPS */
+	printf("%s\n", "TEST: sending queries to the GPS");
 	// Position fix ctl
 	nmea_build_cmd(buf, CMD_GET_FIX_CTL, (char *) NULL);
 	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
@@ -107,9 +102,91 @@ int main(int argc, char **argv){
 	if (nmea_try_read_query_res(buf, CMD_GET_EPO_STATUS, 10) == -1) printf(ERR_READING, buf);
 	else printf(READ_RESPONSE_LOG_PATTERN, buf);
 
+
+	/* Sending commands to the GPS */
+	printf("%s\n", "TEST: sending commands to the GPS");
+	// TEST frame
+	nmea_build_cmd(buf, CMD_TEST, (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_TEST, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Clear EPO file
+	nmea_build_cmd(buf, CMD_CLEAR_EPO_FILE, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_CLEAR_EPO_FILE, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Set baudrate
+	nmea_build_cmd(buf, CMD_SET_BAUDRATE, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_BAUDRATE, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Set fix control
+	nmea_build_cmd(buf, CMD_SET_FIX_CTL, "1000", "0", "0", "0.0", "0.0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_FIX_CTL, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Set DGPS
+	nmea_build_cmd(buf, CMD_SET_DGPS_MODE, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_DGPS_MODE, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Set SBAS
+	nmea_build_cmd(buf, CMD_SET_SBAS, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_SBAS, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	/* Set frames output frequency:
+	 * Values:
+	 * 1=once every position fix, 2=every two position fixes, 3=every three,
+	 * 4=every four, 5=every five
+	 * Position of values:
+	 * GLL, RMC, VTG, GGA, GSA, GSV, GRS, GST, MALM, MEPH, MDGP, MDBG, ZDA, MCHN
+	 */
+	nmea_build_cmd(buf, CMD_SET_OUTPUT, "0", "1", "0", "1", "1", "1", "0",
+		"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_OUTPUT, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	// Set datum
+	nmea_build_cmd(buf, CMD_SET_DATUM, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_DATUM, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+
+	/* Override default settings (writing to the flash, but there's a max number of writes)
+	 * Position of values:
+	 * freeze_settings, update_rate, baud_rate, GLL_period, RMC_period, VTG_period, GSA_period, GSV_period,
+	 * GGA_peiod, ZDA_period, MCHN_period, datum, DGPS_mode, RCM_baudrate
+	 */
+	/*
+	nmea_build_cmd(buf, CMD_SET_USER_OPTION, "0", (char *) NULL);
+	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
+	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
+	if (nmea_try_read_cmd_ack(buf, CMD_SET_USER_OPTION, 10) == -1) printf(ERR_READING, buf);
+	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+	*/
+
+
 	/* Reading more frames */
+	printf("%s\n", "TEST: reading more ordinary frames");
 	for(i=0; i<20; i++){
 		if (gps_read(buf) == -1) printf(ERR_READING, buf);
+		else printf("Read frame: %s", buf);
 	}
 
 	gps_exit();
