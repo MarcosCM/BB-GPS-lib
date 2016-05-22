@@ -119,12 +119,16 @@ int main(int argc, char **argv){
 	if (nmea_try_read_cmd_ack(buf, CMD_CLEAR_EPO_FILE, 10) == -1) printf(ERR_READING, buf);
 	else printf(READ_RESPONSE_LOG_PATTERN, buf);
 
-	// Set baudrate
+	/* Set baudrate
+	 * BE CAREFUL!! This may break the program, as it changes the actual baud rate of the device
+	 */
+	/*
 	nmea_build_cmd(buf, CMD_SET_BAUDRATE, "0", (char *) NULL);
 	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
 	else printf(WRITTEN_CMD_LOG_PATTERN, buf);
 	if (nmea_try_read_cmd_ack(buf, CMD_SET_BAUDRATE, 10) == -1) printf(ERR_READING, buf);
 	else printf(READ_RESPONSE_LOG_PATTERN, buf);
+	*/
 
 	// Set fix control
 	nmea_build_cmd(buf, CMD_SET_FIX_CTL, "1000", "0", "0", "0.0", "0.0", (char *) NULL);

@@ -5,11 +5,11 @@
  * @version 1.0
  */
 
-#define LOG_PATH	"/var/log/gps.log"
-#define LOG_PATTERN	"[%d-%d-%d %d:%d:%d] %s %s\n"
-#define LOG_INFO	"-INFO-"
-#define LOG_WARNING	"-WARNING"
-#define LOG_ERROR	"-ERROR-"
+#define DEBUG_PATH		"/var/log/gps.log"
+#define DEBUG_PATTERN	"[%d-%d-%d %d:%d:%d] %s %s\n"
+#define DEBUG_INFO		"-INFO-"
+#define DEBUG_WARNING	"-WARNING"
+#define DEBUG_ERROR		"-ERROR-"
 
 /**
  *	@brief Log init.

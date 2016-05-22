@@ -25,9 +25,9 @@ static struct tm *get_datetime(){
 
 int gps_log_init(void){
 	// open or create log file
-	log_file = fopen(LOG_PATH, "a");
+	log_file = fopen(DEBUG_PATH, "a");
 	if (log_file<0){
-		printf("Could not open log file %s\nAborting...\n", LOG_PATH);
+		printf("Could not open log file %s\nAborting...\n", DEBUG_PATH);
 		return -1;
 	}
 	return 0;
@@ -37,7 +37,7 @@ int gps_log(const char *buf, const char *level){
 	struct tm tm;
 	if (log_file<0) return -1;
 	tm = *get_datetime();
-	fprintf(log_file, LOG_PATTERN,
+	fprintf(log_file, DEBUG_PATTERN,
 		tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec,
 		level, buf);
 	return 0;

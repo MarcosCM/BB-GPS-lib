@@ -5,12 +5,10 @@
  * @version 1.0
  */
 
-#define LOG // write to log
-
 #include <fcntl.h>	// using low level functions (syscalls) to get more control over the char special file
 #include <string.h>	// string functions
 #include "gps.h"
-#ifdef LOG
+#ifdef DEBUG
 #include "gps_log.h"
 #endif
 
@@ -22,15 +20,15 @@ static int device_fd;
 
 int gps_init(void){
 	char *msg;
-#ifdef LOG
+#ifdef DEBUG
 	gps_log_init();
 #endif
 	// open device file
 	device_fd = open(DEVICE_PATH, O_RDWR);
 	if (device_fd<0){
 		msg = "Could not open device";
-#ifdef LOG
-		gps_log(msg, LOG_ERROR);
+#ifdef DEBUG
+		gps_log(msg, DEBUG_ERROR);
 #else
 		printf("%s\n", msg);
 #endif
@@ -65,8 +63,8 @@ int gps_read(char *buf){
 	} while(curr_char[0] != CHAR_END_OF_STC);
 	frame[i] = '\0';
 
-#ifdef LOG
-	gps_log(frame, LOG_INFO);
+#ifdef DEBUG
+	gps_log(frame, DEBUG_INFO);
 #endif
 	// copy the frame to user's buffer
 	strcpy(buf, frame);
@@ -92,8 +90,8 @@ int gps_write(const char *buf){
 	len = strlen(buf);
 	res = write(device_fd, buf, len);
 	if (res<0 || res != len){
-#ifdef LOG
-		gps_log("Could not send data to the GPS", LOG_ERROR);
+#ifdef DEBUG
+		gps_log("Could not send data to the GPS", DEBUG_ERROR);
 #endif
 		return -1;
 	}
@@ -101,7 +99,7 @@ int gps_write(const char *buf){
 }
 
 int gps_exit(void){
-#ifdef LOG
+#ifdef DEBUG
 	gps_log_exit();
 #endif
 	close(device_fd);
