@@ -181,14 +181,6 @@ int main(int argc, char **argv){
 	else printf(READ_RESPONSE_LOG_PATTERN, buf);
 	*/
 
-
-	/* Reading more frames */
-	printf("%s\n", "TEST: reading more ordinary frames");
-	for(i=0; i<20; i++){
-		if (gps_read(buf) == -1) printf(ERR_READING, buf);
-		else printf("Read frame: %s", buf);
-	}
-
 	gps_exit();
 
 	return 0;
