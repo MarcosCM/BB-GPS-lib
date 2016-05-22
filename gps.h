@@ -7,6 +7,10 @@
 
 #include "nmea.h"
 
+struct latest_read_frame{
+	char frame[100];
+	int is_chk_valid;
+};
 /**
  *	@brief Lib init.
  *
