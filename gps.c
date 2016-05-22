@@ -18,7 +18,9 @@
 
 #include <stdio.h>
 
+#ifndef DEVICE_PATH
 #define DEVICE_PATH "/dev/ttyO4"
+#endif
 
 static int device_fd;
 
@@ -35,7 +37,7 @@ void *reader_thread(void *param){
 	char frame[100], curr_char, valid_chks[5], frame_chks[5];
 	int i = 0, j, frame_chks_idx = -1, is_chk_valid, is_frame_rdy_num;
 	// while exit flag is not raised
-	while(sem_trywait(&reader_exit) == -1){
+	while(sem_trywait(&reader_exit) != 0){
 		// reset values
 		i = 0; frame_chks_idx = -1;
 		// wait for the start of frame
@@ -201,7 +203,6 @@ int gps_exit(void){
 #ifdef DEBUG
 	gps_log_exit();
 #endif
-	close(device_fd);
 #ifdef ASYNC
 	// raise flag to terminate the reader thread
 	sem_post(&reader_exit);
@@ -212,5 +213,6 @@ int gps_exit(void){
 	sem_destroy(&reader_exit);
 	sem_destroy(&is_frame_rdy);
 #endif
+	close(device_fd);
 	return 0;
 }

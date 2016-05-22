@@ -5,7 +5,9 @@
  * @version 1.0
  */
 
+#ifndef DEBUG_PATH
 #define DEBUG_PATH		"/var/log/gps.log"
+#endif
 #define DEBUG_PATTERN	"[%d-%d-%d %d:%d:%d] %s %s\n"
 #define DEBUG_INFO		"-INFO-"
 #define DEBUG_WARNING	"-WARNING"
