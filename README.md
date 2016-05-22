@@ -20,4 +20,4 @@ These are the C compiler available options (defined macros):
 
 ``-D DEVICE_PATH=\"/x/y\"``: path to the character special file that the GPS device is mapped to. By default it is ``/dev/ttyO4``.
 
-``-D DEBUG_PATH=\"/x/y/*.log\"``: path to the log file. By default it is ``/var/log/gps.log``.
+``-D DEBUG_PATH=\"/x/y/z.log\"``: path to the log file. By default it is ``/var/log/gps.log``.
