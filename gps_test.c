@@ -22,7 +22,7 @@ int main(int argc, char **argv){
 
 
 	/* Reading default GGA, GSA, GSV and RMC frames */
-	printf("%s\n", "TEST: reading ordinary frames");
+	printf("\n%s\n", "TEST: reading ordinary frames");
 	for(i=0; i<8; i++){
 		if (gps_read(buf) == -1) printf(ERR_READING, buf);
 		else printf("Read frame: %s", buf);
@@ -30,10 +30,10 @@ int main(int argc, char **argv){
 
 
 	/* Reading all the fields of a single frame */
-	printf("%s\n", "TEST: reading fields of nmea_frame");
+	printf("\n%s\n", "TEST: reading fields of nmea_frame");
 	if (gps_read(buf) == -1) printf(ERR_READING, buf);
 	else{
-		printf("%s\n", buf);
+		printf("%s", buf);
 		nmea_frame_from_str(buf, &nmea_frame);
 		printf("Frame type: %s\n", nmea_frame.frame_type);
 		printf("Cmd type (can be blank): %s\n", nmea_frame.cmd_type);
@@ -45,7 +45,7 @@ int main(int argc, char **argv){
 
 
 	/* Querying configuration data to GPS */
-	printf("%s\n", "TEST: sending queries to the GPS");
+	printf("\n%s\n", "TEST: sending queries to the GPS");
 	// Position fix ctl
 	nmea_build_cmd(buf, CMD_GET_FIX_CTL, (char *) NULL);
 	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
@@ -104,7 +104,7 @@ int main(int argc, char **argv){
 
 
 	/* Sending commands to the GPS */
-	printf("%s\n", "TEST: sending commands to the GPS");
+	printf("\n%s\n", "TEST: sending commands to the GPS");
 	// TEST frame
 	nmea_build_cmd(buf, CMD_TEST, (char *) NULL);
 	if (gps_write(buf) == -1) printf(ERR_WRITING, buf);
