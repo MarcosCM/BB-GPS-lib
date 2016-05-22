@@ -15,7 +15,7 @@
 int nmea_frame_from_str(const char *str, struct nmea_frame *frame){
 	regex_t regexp;
 	char matched_res[100];
-	int i, j, data_field_idx, data_idx, len, res = -2;
+	int i, j, data_field_idx, data_idx, len, res = 0;
 	size_t max_groups = 50;
 	regmatch_t groups[max_groups];
 	char data_field[30];
@@ -75,7 +75,7 @@ int nmea_frame_from_str(const char *str, struct nmea_frame *frame){
 
 	FREE_AND_EXIT:
 	regfree(&regexp);
-	return 0;
+	return res;
 }
 
 int nmea_checksum(const char *frame, char *buf){
