@@ -8,8 +8,8 @@
 * Angstrom distribution
 
 ## How it works
-The GPS module is permanently sending NMEA frames to the BeagleBone through the UART4 pin. It can also emit NMEA frames.
-This lib uses `/dev/ttyO4`, which is the default character special file the device is mapped to, to get/send the NMEA frames.
+The GPS module is permanently sending NMEA frames through the UART pin, so the library uses a character special file that the device is mapped to, in order to read or send NMEA frames.
+You can check out the [slides](https://es.slideshare.net/secret/amAhmfrAIkJb4t) to know more about this lib.
 
 ## Compiler options
 These are the C compiler available options (defined macros):
