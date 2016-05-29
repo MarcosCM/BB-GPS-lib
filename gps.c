@@ -9,8 +9,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 #endif
-#include <fcntl.h>	// using low level functions (syscalls) to get more control over the char special file
-#include <string.h>	// string functions
+#include <termios.h>	// changing terminal options (baud rate, etc)
+#include <fcntl.h>		// using low level functions (syscalls) to get more control over the char special file
+#include <string.h>		// string functions
 #include "gps.h"
 #ifdef DEBUG
 #include "gps_log.h"
@@ -23,6 +24,7 @@
 #endif
 
 static int device_fd;
+static struct termios term_opts;
 
 #ifdef ASYNC
 static struct latest_read_frame latest_read_frame;
@@ -62,10 +64,6 @@ void *reader_thread(void *param){
 		} while(curr_char != CHAR_END_OF_STC);
 		frame[i] = '\0';
 
-#ifdef DEBUG
-		gps_log(frame, DEBUG_INFO);
-#endif
-
 		// if the frame has no checksum then read the next frame
 		if (frame_chks_idx == -1) continue;
 		// if the frame has checksum then check whether it is valid
@@ -99,22 +97,21 @@ void *reader_thread(void *param){
 #endif
 
 int gps_init(void){
-	char *msg;
-
 #ifdef DEBUG
-	gps_log_init();
+	if (gps_log_init() < 0) return -1;
 #endif
 	// open device file
 	device_fd = open(DEVICE_PATH, O_RDWR);
 	if (device_fd<0){
-		msg = "Could not open device";
 #ifdef DEBUG
-		gps_log(msg, DEBUG_ERROR);
+		gps_log("Could not open device", DEBUG_ERROR);
 #else
-		printf("%s\n", msg);
+		printf("%s\n", "Could not open device");
 #endif
 		return -1;
 	}
+
+	tcgetattr(device_fd, &term_opts);
 #ifdef ASYNC
 	sem_init(&is_frame_rdy, 0, 0);
 	sem_init(&reader_exit, 0, 0);
@@ -135,6 +132,9 @@ int gps_read(char *buf){
 	strcpy(buf, latest_read_frame.frame);
 	is_chk_valid = latest_read_frame.is_chk_valid;
 	pthread_mutex_unlock(&frame_mutex);
+#ifdef DEBUG
+	gps_log(buf, DEBUG_INFO);
+#endif
 	if (is_chk_valid) return 0;
 	else return -1;
 #else
@@ -197,6 +197,26 @@ int gps_write(const char *buf){
 		return -1;
 	}
 	return res;
+}
+
+int gps_change_baudrate(const char *str_baudrate){
+	speed_t baudrate;
+	// default baudrate
+	if(strcmp(str_baudrate, "0") == 0) baudrate = B9600;
+	else if(strcmp(str_baudrate, "4800") == 0) baudrate = B4800;
+	else if(strcmp(str_baudrate, "9600") == 0) baudrate = B9600;
+	// 14400 is not supported by termios.h
+	//else if(strcmp(str_baudrate, "14400")) baudrate = B14400;
+	else if(strcmp(str_baudrate, "19200") == 0) baudrate = B19200;
+	else if(strcmp(str_baudrate, "38400") == 0) baudrate = B38400;
+	else if(strcmp(str_baudrate, "57600") == 0) baudrate = B57600;
+	else if(strcmp(str_baudrate, "115200") == 0) baudrate = B115200;
+	else return -1;
+
+	if (cfsetispeed(&term_opts, baudrate) < 0
+		|| cfsetospeed(&term_opts, baudrate) < 0
+		|| tcflush(device_fd, TCIOFLUSH)) return -1;
+	return tcsetattr(device_fd, TCSANOW, &term_opts);
 }
 
 int gps_exit(void){
