@@ -13,6 +13,7 @@
 #include <fcntl.h>		// using low level functions (syscalls) to get more control over the char special file
 #include <string.h>		// string functions
 #include "gps.h"
+#include "gps_utils.h"
 #ifdef DEBUG
 #include "gps_log.h"
 #endif
