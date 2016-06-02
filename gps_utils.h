@@ -27,3 +27,12 @@ struct gps_position{
  *	@return	Operation status: negative if error, otherwise success.
  */
 int gps_try_get_position(struct gps_position *gps_position, int num_reads);
+/**
+ *	@brief Tries to read the number of satellites in view.
+ *
+ *	@param num_satellites	Pointer to user's buffer to store the data.
+ *	@param num_reads		Number of reads till read fails. If 0 then there will not be limit.
+ *
+ *	@return	Operation status: negative if error, otherwise success.
+ */
+int gps_try_get_num_satellites(int *num_satellites, int num_reads);
