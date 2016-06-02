@@ -51,8 +51,6 @@
 #define CMD_GET_FW_INFO		"605"
 #define CMD_GET_EPO_STATUS	"607"
 
-enum data_type {INTEGER, DOUBLE, CHAR, STRING, BLANK};
-
 struct nmea_frame{
 	// GPGGA, GPGSA, GPGSV, GPRMC, PMTK...
 	char frame_type[6];
