@@ -6,7 +6,8 @@
  */
 
 struct gps_position{
-	char *datetime;
+	// UTC datetime of the fix in format hhmmss.ddd
+	char datetime[11];
 	// latitude degrees
 	float lat_deg;
 	// latitude direction
