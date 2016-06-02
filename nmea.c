@@ -146,8 +146,8 @@ int nmea_try_read_cmd_ack(char *buf, char *cmd_type, int num_reads){
 
 	if(num_reads>0){
 		for(i=0; i<num_reads; i++){
-			gps_read(read_frame);
-			nmea_frame_from_str(read_frame, &nmea_frame);
+			// error checking after getting a frame (e.g. invalid checksum)
+			if (gps_read(read_frame) < 0 || nmea_frame_from_str(read_frame, &nmea_frame) < 0) return -1;
 			// check whether it is a sentence or a command response
 			if (nmea_frame.cmd_type[0] != '\0'
 					// check whether it is an ACK
@@ -161,8 +161,8 @@ int nmea_try_read_cmd_ack(char *buf, char *cmd_type, int num_reads){
 	}
 	else{
 		while(1){
-			gps_read(read_frame);
-			nmea_frame_from_str(read_frame, &nmea_frame);
+			// error checking after getting a frame (e.g. invalid checksum)
+			if (gps_read(read_frame) < 0 || nmea_frame_from_str(read_frame, &nmea_frame) < 0) return -1;
 			// check whether it is a sentence or a command response
 			if (nmea_frame.cmd_type[0] != '\0'
 					// check whether it is an ACK
@@ -190,8 +190,8 @@ int nmea_try_read_query_res(char *buf, char *query_type, int num_reads){
 
 	if(num_reads>0){
 		for(i=0; i<num_reads; i++){
-			gps_read(read_frame);
-			nmea_frame_from_str(read_frame, &nmea_frame);
+			// error checking after getting a frame (e.g. invalid checksum)
+			if (gps_read(read_frame) < 0 || nmea_frame_from_str(read_frame, &nmea_frame) < 0) return -1;
 			// check whether it is a sentence or a command response
 			if (nmea_frame.cmd_type[0] != '\0'
 					// check whether it is a response to this kind of query
@@ -203,8 +203,8 @@ int nmea_try_read_query_res(char *buf, char *query_type, int num_reads){
 	}
 	else{
 		while(1){
-			gps_read(read_frame);
-			nmea_frame_from_str(read_frame, &nmea_frame);
+			// error checking after getting a frame (e.g. invalid checksum)
+			if (gps_read(read_frame) < 0 || nmea_frame_from_str(read_frame, &nmea_frame) < 0) return -1;
 			// check whether it is a sentence or a command response
 			if (nmea_frame.cmd_type[0] != '\0'
 					// check whether it is a response to this kind of query

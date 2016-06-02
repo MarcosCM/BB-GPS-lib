@@ -5,6 +5,10 @@
  * @version 1.0
  */
 
+#include <string.h>
+#include "gps_utils.h"
+#include "nmea.h"
+
 int gps_try_get_position(struct gps_position *gps_position, int num_reads){
 	int i;
 	char read_frame[100], *caux;
