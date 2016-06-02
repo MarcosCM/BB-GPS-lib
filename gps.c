@@ -215,7 +215,7 @@ int gps_change_baudrate(const char *str_baudrate){
 
 	if (cfsetispeed(&term_opts, baudrate) < 0
 		|| cfsetospeed(&term_opts, baudrate) < 0
-		|| tcflush(device_fd, TCIOFLUSH)) return -1;
+		|| tcflush(device_fd, TCIOFLUSH) < 0) return -1;
 	return tcsetattr(device_fd, TCSANOW, &term_opts);
 }
 
