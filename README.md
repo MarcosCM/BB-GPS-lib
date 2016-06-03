@@ -8,7 +8,7 @@ Tested using:
 However, it supports any MediaTek GPS module (NMEA frames that the GPS module **receives** depends on the manufacturer implementation).
 
 ## Software
-Tested used Ångström distribution.
+Tested using Ångström distribution.
 
 However, it supports any UNIX system.
 
